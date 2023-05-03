@@ -2,6 +2,7 @@ const User = require("../users/model.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+
 const comparePass = async (req, res, next) => {
   try {
     //lookup user in database using username sent in request body
