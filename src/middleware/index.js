@@ -2,6 +2,7 @@ const User = require("../users/model.js");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
 
+
 const comparePass = async (req, res, next) => {
   try {
     //lookup user in database using username sent in request body
@@ -12,6 +13,7 @@ const comparePass = async (req, res, next) => {
     if (!req.ourUser) {
       throw new Error("Credentials Incorrect");
     }
+
     //use bcypt to compare the incomming password with the encrypted one stored in the database
     req.ourUser.passed = await bcrypt.compare(
       req.body.password,
@@ -20,6 +22,7 @@ const comparePass = async (req, res, next) => {
     //configure return object
     if (req.ourUser.passed) {
       req.user = {
+        id:req.ourUser.id,
         username: req.ourUser.username,
         password: req.ourUser.password,
       };
@@ -49,19 +52,24 @@ const hashPass = async (req, res, next) => {
   }
 };
 
-const tokenCheck = async () => {
-  try {
+
+
+const tokenCheck = async (req, res, next) => {
+  try {    
+    console.log("token check");
     //check for the authorization header
     if (!req.header("Authorization")) {
       throw new Error("Missing Credentials");
     }
     //extract the token from the request header
-    const token = req.header("Authorization").replace("Bearer", "");
+
+    const token = req.header("Authorization").replace("Bearer ", "");
+    console.log("token", token);
     //decode the token
     const newID = jwt.verify(token, process.env.SECRET_KEY);
-    //lookup user from decoded id
-    const newUser = User.findOne({ where: { id: newID } });
-    //check if we found a user and return with response if not
+     //lookup user from decoded id
+    const newUser = await User.findOne({ where: { id:newID.id } });
+     //check if we found a user and return with response if not
     if (!newUser) {
       res.status(401).json({ messge: "User not authorised" });
       return;
@@ -72,10 +80,12 @@ const tokenCheck = async () => {
       username: newUser.username,
       password: newUser.password,
     };
+
     //go to the next stage in the route
     next();
   } catch (error) {
-    console.error(error);
+    console.error(error)
+
     res.status(501).json({ message: "failure", error: error });
   }
 };

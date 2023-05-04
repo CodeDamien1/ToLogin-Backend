@@ -1,30 +1,33 @@
-require("dotenv").config()
-const express = require("express")
 
-const cors = require("cors")
-const port = process.env.PORT || 5001  
+require("dotenv").config();
 
-const userRouter = require("./users/routes")
+const cors = require("cors");
+const express = require("express");
+const port = process.env.PORT || 5001;
 
-const User = require("./users/model")
+const User = require("./users/model");
+const userRouter = require("./users/routes.js");
+const ActiveTodo = require("./activeTodos/model");
+const activeTodoRouter = require("./activeTodos/routes");
 
-const app = express() 
+const app = express();
+app.use(cors());
+app.use(express.json());
+app.use(userRouter);
 
-app.use(cors())
+User.hasMany(ActiveTodo);
+ActiveTodo.belongsTo(User);
 
-app.use(express.json()) 
+const syncTables = (() => {
+  console.log("Syncing");
+  User.sync({ alter: true });
+  ActiveTodo.sync({alter:true});
+})();
 
-const syncTables = () => {
-    User.sync()
-} 
+app.get("/", (req, res) => {
+  res.send("Application is running");
+});
+app.listen(port, () =>
+  console.log("Application listening intently on port ", port)
+);
 
-app.use(userRouter)
-
-app.get("/health", (req, res) => {
-    res.status(200).json({message: "api is working"})
-}) 
-
-app.listen(port, () => {
-    syncTables()
-    console.log(`Server is running on port ${port}`)
-})
