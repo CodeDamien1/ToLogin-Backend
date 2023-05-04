@@ -13,7 +13,8 @@ const comparePass = async (req, res, next) => {
     if (!req.ourUser) {
       throw new Error("Credentials Incorrect");
     }
-    //use bcypt to compare the incomming password with the encrypted one stored in the database
+    
+    //use bcrypt to compare the incoming password with the encrypted one stored in the database
     req.ourUser.passed = await bcrypt.compare(
       req.body.password,
       req.ourUser.password
@@ -36,7 +37,7 @@ const comparePass = async (req, res, next) => {
 const hashPass = async (req, res, next) => {
   try {
     //get number of salt rounds from .env file
-    const saltRounds = process.env(SALT_ROUNDS);
+    const saltRounds = process.env.SALT_ROUNDS;
     //get user password and pass to bcrypt to create the hash
     req.body.password = await bcrypt.hash(
       req.body.password,
@@ -64,7 +65,7 @@ const tokenCheck = async () => {
     const newUser = User.findOne({ where: { id: newID } });
     //check if we found a user and return with response if not
     if (!newUser) {
-      res.status(401).json({ messge: "User not authorised" });
+      res.status(401).json({ message: "User not authorised" });
       return;
     }
     //prepare successful response
