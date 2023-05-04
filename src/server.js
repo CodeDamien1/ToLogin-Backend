@@ -5,8 +5,10 @@ const cors = require("cors")
 const port = process.env.PORT || 5001  
 
 const userRouter = require("./users/routes")
+const activeToDoRouter = require("./activeTodos/routes")
 
 const User = require("./users/model")
+const ToDo = require("./activeTodos/model")
 
 const app = express() 
 
@@ -19,6 +21,7 @@ const syncTables = () => {
 } 
 
 app.use(userRouter)
+app.use(activeToDoRouter)
 
 app.get("/health", (req, res) => {
     res.status(200).json({message: "api is working"})
