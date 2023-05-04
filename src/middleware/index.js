@@ -77,7 +77,7 @@ const tokenCheck = async () => {
     //go to the next stage in the route
     next();
   } catch (error) {
-    console.error(error);
+    console.error(error)
     res.status(501).json({ message: "failure", error: error });
   }
 };
