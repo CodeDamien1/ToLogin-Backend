@@ -1,3 +1,4 @@
+
 require("dotenv").config();
 
 const cors = require("cors");
@@ -29,3 +30,4 @@ app.get("/", (req, res) => {
 app.listen(port, () =>
   console.log("Application listening intently on port ", port)
 );
+
