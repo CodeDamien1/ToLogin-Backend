@@ -3,7 +3,7 @@ const ActiveTodo = require("./model");
 const addActiveTodo = async (req, res) => {
   try {
     //use create method to make a new record with user id from authCheck and todo string from req.body
-    console.log("req.id", req.body.userID);
+    // console.log("req.id", req.body.userID);
     const newTodo = await ActiveTodo.create({
       UserId: req.authCheck.id,          //this is an auto-generated field by sequelize
       todo: req.body.todo,
@@ -33,7 +33,7 @@ const deleteActiveTodo = async (req, res) => {
     if (!result){
         throw new Error("Deletion failed")
     }
-    //successful deletion so send seccessful response
+    //successful deletion so send successful response
     res.status(204).json({ message: "success" });
   } catch (error) {
     res.status(501).json({ errorMessage: error.message, error: error });
@@ -70,7 +70,7 @@ module.exports = {
 };
 /*  deleteActiveTodo
 
-Recieves from:
+Receives from:
     tokenCheck
 
 Purpose: delete todo to active table through User relationship
