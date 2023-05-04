@@ -39,6 +39,7 @@ const hashPass = async (req, res, next) => {
   try {
     //get number of salt rounds from .env file
 
+
     const saltRounds = process.env(SALT_ROUNDS);
 
     //get user password and pass to bcrypt to create the hash
