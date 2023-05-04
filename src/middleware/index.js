@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 
 const comparePass = async (req, res, next) => {
   try {
-    console.log("compare");
     //lookup user in database using username sent in request body
     req.ourUser = await User.findOne({
       where: { userName: req.body.username },
@@ -14,10 +13,8 @@ const comparePass = async (req, res, next) => {
     if (!req.ourUser) {
       throw new Error("Credentials Incorrect");
     }
-    
-    //use bcrypt to compare the incoming password with the encrypted one stored in the database
-console.log("passwords", req.body.password,
-req.ourUser.password);
+
+    //use bcypt to compare the incomming password with the encrypted one stored in the database
     req.ourUser.passed = await bcrypt.compare(
       req.body.password,
       req.ourUser.password
@@ -40,8 +37,6 @@ req.ourUser.password);
 
 const hashPass = async (req, res, next) => {
   try {
-    
-    console.log("hash");
     //get number of salt rounds from .env file
     const saltRounds = process.env.SALT_ROUNDS;
     //get user password and pass to bcrypt to create the hash
@@ -58,27 +53,24 @@ const hashPass = async (req, res, next) => {
 };
 
 
-const tokenCheck = async (req, res, next) => {
 
-  try {
-    
+const tokenCheck = async (req, res, next) => {
+  try {    
     console.log("token check");
     //check for the authorization header
     if (!req.header("Authorization")) {
       throw new Error("Missing Credentials");
     }
     //extract the token from the request header
+
     const token = req.header("Authorization").replace("Bearer ", "");
     console.log("token", token);
     //decode the token
     const newID = jwt.verify(token, process.env.SECRET_KEY);
-    console.log("***newID", newID.id);
-    //lookup user from decoded id
+     //lookup user from decoded id
     const newUser = await User.findOne({ where: { id:newID.id } });
-    console.log("newUser", newUser);
-    //check if we found a user and return with response if not
+     //check if we found a user and return with response if not
     if (!newUser) {
-      console.log(("No user found"));
       res.status(401).json({ messge: "User not authorised" });
       return;
     }
@@ -88,11 +80,12 @@ const tokenCheck = async (req, res, next) => {
       username: newUser.username,
       password: newUser.password,
     };
-    console.log("req.authCheck", req.authCheck);
+
     //go to the next stage in the route
     next();
   } catch (error) {
     console.error(error)
+
     res.status(501).json({ message: "failure", error: error });
   }
 };
@@ -101,3 +94,4 @@ module.exports = {
   hashPass,
   tokenCheck,
 };
+
