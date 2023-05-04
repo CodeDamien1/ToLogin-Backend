@@ -5,7 +5,7 @@ const addActiveTodo = async (req, res) => {
     //use create method to make a new record with user id from authCheck and todo string from req.body
     console.log("req.id", req.body.userID);
     const newTodo = await ActiveTodo.create({
-      UserId: req.body.userID,//req.authCheck.id,          //this is an auto-generated field by sequelize
+      UserId: req.authCheck.id,          //this is an auto-generated field by sequelize
       todo: req.body.todo,
     });
     if (!newTodo) {
