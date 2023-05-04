@@ -7,7 +7,7 @@ const registerUser = async (req, res) => {
         const token = await jwt.sign({id: user.id }, process.env.SECRET_KEY);
         res.status(201).json({
             message: "success",
-            user: {username: req.body.username, email: req.body.email, token: token}
+            user: {username: req.body.username, token: token}
         })
     } catch (error) {
         res.status(501).json({errorMessage: error.message, error: error})
@@ -21,7 +21,6 @@ const login = async (req, res) => {
               message: "success",
               user: {
                 username: req.authUser.username,
-                email: req.authUser.email
               }
             })
             return
@@ -32,7 +31,6 @@ const login = async (req, res) => {
             message: "success",
             user: {
                 username: req.user.username,
-                email: req.user.email,
                 token: token
             }
         })

@@ -10,7 +10,7 @@ const userRouter= require("./users/routes.js");
 const app = express();
 app.use(cors());
 app.use(express.json());
-//app.use(userRouter);
+app.use(userRouter);
 
 const syncTables =(() =>{
     console.log("Syncing");
