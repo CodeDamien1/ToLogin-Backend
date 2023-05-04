@@ -39,8 +39,7 @@ req.ourUser.password);
 };
 
 const hashPass = async (req, res, next) => {
-  try {
-    
+  try {    
     console.log("hash");
     //get number of salt rounds from .env file
     const saltRounds = process.env.SALT_ROUNDS;
