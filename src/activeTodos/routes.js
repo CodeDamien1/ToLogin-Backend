@@ -1,12 +1,10 @@
-const { Router } = require("express")
+const activeTodoRouter = require("express").Router()
 
-const activeToDoRouter = Router()
+const {addActiveTodo, deleteActiveTodo, getActiveTodoList} = require("./controllers");
+const {tokenCheck } = require("../middleware");
 
-const { addActiveTodo, deleteActiveTodo } = require("./controllers") 
-const { tokenCheck } = require("../middleware")
+activeTodoRouter.post("/activetodos/addtodo", addActiveTodo);
+activeTodoRouter.post("/activetodos/deleteactivetodo",deleteActiveTodo);
+activeTodoRouter.get("/activetodos/getactivetodos/:id", getActiveTodoList)
 
-activeToDoRouter.post("/activetodos/addtodo", tokenCheck, addActiveTodo)
 
-activeToDoRouter.post("/activetodos/deleteactivetodo", tokenCheck, deleteActiveTodo)
-
-module.exports = activeToDoRouter
