@@ -10,7 +10,7 @@ const userRouter = require("./users/routes.js");
 const ActiveTodo = require("./activeTodos/model");
 const activeTodoRouter = require("./activeTodos/routes");
 const DoneTodo = require("./doneTodos/model");
-const doneTodoRouter = require("./doneTodos/routes");
+const doneTodoRouter = require("./doneTodos/routes.js");
 
 const app = express();
 app.use(cors());
