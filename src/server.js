@@ -9,20 +9,26 @@ const User = require("./users/model");
 const userRouter = require("./users/routes.js");
 const ActiveTodo = require("./activeTodos/model");
 const activeTodoRouter = require("./activeTodos/routes");
+const DoneTodo = require("./doneTodos/model");
+const doneTodoRouter = require("./doneTodos/routes");
 
 const app = express();
 app.use(cors());
 app.use(express.json());
 app.use(userRouter);
+app.use(activeTodoRouter);
+app.use(doneTodoRouter);
+
 
 User.hasMany(ActiveTodo);
+User.hasMany(DoneTodo);
 ActiveTodo.belongsTo(User);
+DoneTodo.belongsTo(User);
 
-const syncTables = (() => {
   console.log("Syncing");
   User.sync({ alter: true });
   ActiveTodo.sync({alter:true});
-})();
+  DoneTodo.sync({alter: true});
 
 app.get("/", (req, res) => {
   res.send("Application is running");
